@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title th:text="${titulo}">Formulario de Crítica</title>
+    <link th:href="@{/styles/formCritica.css}" rel="stylesheet">
+</head>
+<body layout:fragment="body">
+<div class="container py-4">
+    <h1 th:text="${titulo}">Formulario de Crítica</h1>
+
+    <!-- Información de la Película -->
+    <div class="card bg-light mb-3">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${pelicula.titulo}">Título de la Película</h5>
+            <p class="card-text"><strong>Género:</strong> <span th:text="${pelicula.genero}"></span></p>
+            <p class="card-text"><strong>Dirección:</strong> <span th:text="${pelicula.direccion}"></span></p>
+            <p class="card-text"><strong>Año:</strong> <span th:text="${pelicula.annio}"></span></p>
+            <p class="card-text"><strong>Duración:</strong> <span th:text="${pelicula.duracion}"></span> min</p>
+        </div>
+    </div>
+
+    <!-- Formulario para escribir la crítica -->
+    <form th:action="@{/ccriticas/guardar}" th:object="${critica}" method="post">
+        <!-- Mostrar errores dentro del formulario -->
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+            Por favor corrija los siguientes errores:
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{peliculaId}"/>
+        <input type="hidden" th:field="*{user.id}"/>
+
+        <div class="mb-3">
+            <label for="valoracion" class="form-label">Valoración</label>
+            <textarea id="valoracion" th:field="*{valoracion}" class="form-control" rows="3" placeholder="Escribe tu valoración" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="nota" class="form-label">Nota (1-10)</label>
+            <input type="number" id="nota" th:field="*{nota}" class="form-control" min="1" max="10" placeholder="Escribe tu nota" required>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a class="btn btn-secondary" th:href="@{/cpeliculas/detalle/{id}(id=${pelicula.id})}">Cancelar</a>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/formCritica.js}"></script>
+</body>
+</html>

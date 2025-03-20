@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles de la Crítica</title>
+</head>
+<body layout:fragment="body">
+<div class="container py-4">
+    <div class="card bg-light">
+        <div class="card-header" th:text="'Crítica de: ' + ${tituloPelicula}">Detalles de la Crítica</div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Película:</strong>
+                    <a th:href="@{'/cpeliculas/detalle/' + ${critica.peliculaId}}" th:text="${tituloPelicula}">Película</a>
+                </li>
+                <li class="list-group-item"><strong>Usuario:</strong>
+                    <span th:text="${critica.user.username}">Usuario</span>
+                </li>
+                <li class="list-group-item"><strong>Valoración:</strong>
+                    <span th:text="${critica.valoracion}">Valoración</span>
+                </li>
+                <li class="list-group-item"><strong>Nota:</strong>
+                    <span th:text="${critica.nota}">Nota</span>
+                </li>
+                <li class="list-group-item"><strong>Fecha:</strong>
+                    <span th:text="${#dates.format(critica.fecha, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr>
+    <div class="d-flex justify-content-start">
+        <a class="btn btn-primary me-2" role="button" onclick="history.back()">Volver al Listado</a>
+        <a class="btn btn-secondary" role="button" th:href="@{/home}">Volver al Inicio</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+.navbar {
+    min-height: 11vh;
+    padding-left: 20px;
+}
+.navbar-brand img {
+    width: 4vw;
+    height:6vh;
+}

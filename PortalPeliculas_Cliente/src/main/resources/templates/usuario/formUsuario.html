@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title th:text="${titulo}">Formulario de Usuario</title>
+    <link th:href="@{/styles/formUsuario.css}" rel="stylesheet">
+</head>
+<body layout:fragment="body">
+<div class="container py-4">
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <p th:text="${error}"></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+
+    <h1 th:text="${session.role == 'ADMIN' ? 'Formulario de Usuario' : (usuario.id != null ? 'Editar Usuario' : 'Registrarse')}"></h1>
+    <form th:with="actionUrl=${session.role == 'ADMIN' ? '/cusuarios/guardar' : '/cusuarios/registrar'}"
+          th:action="@{${actionUrl}}" th:object="${usuario}" method="post">
+    <!-- Mostrar errores -->
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            Por favor corrija los siguientes errores:
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <!-- Campo oculto para ID -->
+        <div th:if="${usuario.id != null}">
+            <input type="hidden" th:field="*{id}" />
+        </div>
+
+        <!-- Nombre de Usuario -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Nombre de Usuario</label>
+            <input type="text" id="username" th:field="*{username}" class="form-control" placeholder="Nombre de usuario" required>
+        </div>
+
+        <!-- Correo Electrónico -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Correo electrónico" required>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-3">
+            <label for="password" class="form-label" th:text="${usuario.id != null ? 'Nueva Contraseña (Déjelo vacío si no desea cambiarla)' : 'Contraseña'}"></label>
+            <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="Contraseña" th:required="${usuario.id == null}">
+        </div>
+
+        <!-- Estado (Activo/Inactivo) - Solo para Administradores -->
+        <div class="mb-3" th:if="${session.role == 'ADMIN'}">
+            <label class="form-label">Estado</label>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" id="activo" th:field="*{enabled}" value="true" />
+                <label class="form-check-label" for="activo">Activo</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" id="inactivo" th:field="*{enabled}" value="false" />
+                <label class="form-check-label" for="inactivo">Inactivo</label>
+            </div>
+        </div>
+
+        <!-- Selección de Roles - Solo para Administradores -->
+        <div class="mb-3" th:if="${session.role == 'ADMIN'}">
+            <label for="role" class="form-label">Rol</label>
+            <select class="form-control" id="role" name="authority" th:field="*{authority.id}">
+                <option th:each="authority : ${allAuthorities}" th:value="${authority.id}"
+                        th:selected="${authority.id == usuario.authority.id}"
+                        th:text="${authority.authority}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Botones -->
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary" th:text="${session.role == 'ADMIN' ? 'Guardar'  : 'Registrarse'}"></button>
+            <button type="reset" class="btn btn-warning" th:if="${session.role == 'ADMIN'}">Restablecer</button>
+            <a class="btn btn-secondary" th:if="${session.role == 'ADMIN'}" th:href="@{/cusuarios/listado}">Cancelar</a>
+            <button type="button" class="btn btn-secondary" th:unless="${session.role == 'ADMIN'}" onclick="history.back()">Regresar</button>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/formUsuario.js}"></script>
+</body>
+</html>

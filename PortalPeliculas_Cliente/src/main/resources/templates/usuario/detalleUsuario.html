@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles del Usuario</title>
+</head>
+<body layout:fragment="body">
+<div class="container py-4">
+    <div class="card bg-light">
+        <div class="card-header" th:text="'Detalles de Usuario: ' + ${usuario.username}"></div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>ID:</strong> <span th:text="${usuario.id}"></span></li>
+                <li class="list-group-item"><strong>Nombre:</strong> <span th:text="${usuario.username}"></span></li>
+                <li class="list-group-item"><strong>Email:</strong> <span th:text="${usuario.email}"></span></li>
+                <li class="list-group-item"><strong>Estado:</strong> <span th:text="${usuario.enabled ? 'Activo' : 'Inactivo'}"></span></li>
+                <li class="list-group-item">
+                    <strong>Rol:</strong>
+                    <!-- Mostrar el rol del usuario -->
+                    <span th:text="${usuario.authority != null ? usuario.authority.authority : 'Sin rol asignado'}"></span>
+                </li>
+                <li class="list-group-item"><strong>Fecha de Registro:</strong> <span th:text="${usuario.createdAt}"></span></li>
+            </ul>
+        </div>
+    </div>
+    <hr>
+    <div class="d-flex justify-content-start">
+        <a class="btn btn-primary me-2" role="button" onclick="history.back()">Volver al Listado</a>
+        <a class="btn btn-secondary" role="button" th:href="@{/home}">Volver al Inicio</a>
+    </div>
+</div>
+</body>
+</html>

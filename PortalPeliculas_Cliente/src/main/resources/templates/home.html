@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal Película | Aplicación de gestión de películas</title>
+</head>
+<body layout:fragment="body">
+<div class="container">
+    <!-- Mensajes de éxito -->
+    <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${mensaje}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <h1 class="text-center">Gestión de películas</h1>
+    <hr>
+    <div class="card-group">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Listado películas</h3>
+                <a class="btn btn-link" th:href="@{/cpeliculas/listado}">Listado películas</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Buscar películas</h3>
+                <a class="btn btn-link" th:href="@{/cpeliculas/buscar}">Buscar películas</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Listado Actor</h3>
+                <a class="btn btn-link" th:href="@{/cactor/listado}">Listado de actores</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Buscar Actor</h3>
+                <a class="btn btn-link" th:href="@{/cactor/buscar}">Buscar actores</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${titulo}">Listado de Usuarios</title>
+    <script th:src="@{/js/listUsuario.js}" defer></script>
+</head>
+<body>
+<div layout:fragment="body">
+    <h1 th:text="${titulo}">Listado de todos los usuarios</h1>
+
+    <!-- Botón para añadir usuario -->
+    <a class="btn btn-success mb-3" th:href="@{/cusuarios/nuevo}" th:if="${session.role == 'ADMIN'}">Añadir nuevo usuario</a>
+    <!-- Botón para buscar usuario -->
+    <a class="btn btn-info mb-3" th:href="@{/cusuarios/buscar}" th:if="${session.role == 'ADMIN'}">Buscar Usuario</a>
+
+    <!-- Mensajes de éxito -->
+    <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${mensaje}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${listadoUsuarios}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.enabled ? 'Activo' : 'Inactivo'}"></td>
+
+            <!-- Mostrar el rol -->
+            <td th:if="${user.authority == null}">No tiene</td>
+            <td th:unless="${user.authority == null}" th:text="${user.authority.authority}"></td>
+
+            <!-- Botones de acciones -->
+            <td>
+                <a th:href="@{/cusuarios/editar/{id}(id=${user.id})}" class="btn btn-primary btn-sm" th:if="${session.role == 'ADMIN'}">Editar</a>
+                <a th:href="@{/cusuarios/detalle/{id}(id=${user.id})}" class="btn btn-info btn-sm">Ver Detalle</a>
+                <button type="button" class="btn btn-danger btn-sm"
+                        th:if="${session.role == 'ADMIN'}"
+                        th:onclick="'confirmDeletion(' + ${user.id} + ')'">Borrar</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Paginación y botón guardar cambios -->
+    <div class="d-flex justify-content-between align-items-center">
+        <div th:replace="~{paginator-nav :: paginator}"></div>
+    </div>
+</div>
+</body>
+</html>

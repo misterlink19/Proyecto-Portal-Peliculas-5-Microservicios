@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${titulo}">Detalles de Película</title>
+
+  <!-- Importamos el script que manejará las críticas dinámicamente -->
+  <script th:src="@{/js/detallePelicula.js}" defer></script>
+
+  <style>
+    .criticas-header {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+
+<body layout:fragment="body">
+
+<!-- Contenedor principal -->
+<div class="container py-4">
+  <!-- Mensajes Flash -->
+  <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <span th:text="${mensaje}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span th:text="${error}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+
+  <!-- Guardamos el email del usuario autenticado en un `data-attribute` -->
+  <div id="user-info" th:data-email="${session.email}"></div>
+
+  <!-- Tarjeta con los detalles de la película -->
+  <div class="card bg-light">
+    <div class="card-header" th:text="${titulo}">Detalles de la Película</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <ul class="list-group">
+            <li class="list-group-item active" th:text="'Título: ' + ${pelicula.titulo}">Título</li>
+            <li class="list-group-item" th:text="'Género: ' + ${pelicula.genero}">Género</li>
+            <li class="list-group-item">
+              <span th:text="'Año: ' + ${pelicula.annio}">Año</span>
+              <span class="mx-2">|</span>
+              <span th:text="'Duración: ' + ${pelicula.duracion} + ' minutos'">Duración</span>
+            </li>
+            <li class="list-group-item" th:text="'Dirección: ' + ${pelicula.direccion}">Direccion</li>
+            <li class="list-group-item" th:text="'País: ' + ${pelicula.nombrePais}">País</li>
+            <li class="list-group-item">
+              Actores: <span id="actores"></span>
+              <ul id="actores-list" style="display: none;">
+                <li th:each="actor : ${pelicula.actores}" th:data-id="${actor.id}" th:text="${actor.nombre}"></li>
+              </ul>
+            </li>
+            <li class="list-group-item" th:text="'Sinopsis: ' + ${pelicula.sinopsis}">Sinopsis</li>
+            <li class="list-group-item" th:text="'Nota Media: ' + ${notaMedia}">Nota Media</li>
+          </ul>
+        </div>
+
+        <!-- Imagen de la película -->
+        <div class="col-md-4 text-center">
+          <img th:if="${pelicula.imagenPortada != null && #strings.length(pelicula.imagenPortada) > 0}"
+               class="img-thumbnail rounded" style="max-width:100%"
+               th:src="@{'/cpeliculas/uploads/' + ${pelicula.imagenPortada}}" th:alt="${pelicula.imagenPortada}">
+          <img th:unless="${pelicula.imagenPortada != null && #strings.length(pelicula.imagenPortada) > 0}"
+               class="img-thumbnail rounded" style="max-width:100%"
+               src="/images/portada_no_encontrada.jpg" alt="Portada No Encontrada">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Sección de Críticas -->
+  <div class="card bg-light mt-4">
+    <div class="card-header criticas-header">Críticas de la Película</div>
+    <div class="card-body">
+      <div th:if="${errorCriticas}">
+        <p class="text-danger" th:text="${errorCriticas}"></p>
+      </div>
+      <div th:unless="${errorCriticas}">
+        <div th:if="${criticas.isEmpty()}">
+          <p>No hay críticas para esta película.</p>
+        </div>
+        <div th:unless="${criticas.isEmpty()}">
+          <ul class="list-group" id="criticas-list">
+            <li th:each="critica : ${criticas}" class="list-group-item" th:attr="data-user-email=${critica.user?.email}">
+              <strong>Usuario:</strong> <span th:text="${critica.user?.username ?: 'Usuario desconocido'}"></span>
+              <p><strong>Valoración:</strong> <span th:text="${critica.valoracion}"></span></p>
+              <p><strong>Nota:</strong> <span th:text="${critica.nota}"></span></p>
+              <p><em>Fecha:</em> <span th:text="${#temporals.format(critica.fecha, 'dd-MM-yyyy')}"></span></p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Botón para escribir una crítica (se ocultará con JS si ya existe una) -->
+  <div th:if="${session.username != null}">
+    <div id="critica-boton-container" class="text-center mt-3">
+    <a id="crear-critica-btn"
+       th:href="@{/ccriticas/nueva/{peliculaId}(peliculaId=${pelicula.id}, email=${session.email})}"
+       class="btn btn-primary">
+      Escribir una crítica
+    </a>
+    </div>
+  </div>
+
+
+  <!-- Si el usuario no ha iniciado sesión, mostrar un mensaje -->
+  <div th:if="${session.username == null}" class="text-center mt-3">
+    <p>Para escribir una crítica, <a th:href="@{/login}">inicia sesión</a>.</p>
+  </div>
+
+  <!-- Botón de Volver -->
+  <a class="btn btn-primary mt-4" role="button" th:href="@{/cpeliculas/listado}">Volver al Listado</a>
+
+</div>
+
+</body>
+</html>

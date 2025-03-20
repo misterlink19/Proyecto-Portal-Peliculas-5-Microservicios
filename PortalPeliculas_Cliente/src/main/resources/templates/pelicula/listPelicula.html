@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${titulo}">Listado de Películas</title>
+    <script th:src="@{/js/listPeliculas.js}" defer></script>
+</head>
+<body>
+<div layout:fragment="body">
+    <h1 th:text="${titulo}">Listado de todas las películas</h1>
+    <a class="btn btn-success mb-3" th:href="@{/cpeliculas/nuevo}" th:if="${session.role == 'ADMIN'}">Añadir nueva
+        película</a>
+    <div th:if="${mensaje}" class="alert alert-success" role="alert">
+        <span th:text="${mensaje}"></span>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Año</th>
+            <th>Duración (Minutos)</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pelicula : ${listadoPeliculas}">
+            <td th:text="${pelicula.id}">1</td>
+            <td th:text="${pelicula.titulo}">Título</td>
+            <td th:text="${pelicula.annio}">2022</td>
+            <td th:text="${pelicula.duracion}">120 minutos</td>
+            <td>
+                <a th:href="@{/cpeliculas/editar/{id}(id=${pelicula.id})}" class="btn btn-primary"
+                   th:if="${session.role == 'ADMIN'}">Editar</a>
+                <button type="button" class="btn btn-danger" th:onclick="'confirmDeletion(' + ${pelicula.id} + ')'"
+                        th:if="${session.role == 'ADMIN'}">Borrar
+                </button>
+                <a th:href="@{/cpeliculas/detalle/{id}(id=${pelicula.id})}" class="btn btn-info">Ver Detalle</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:replace="~{paginator-nav :: paginator}"></div>
+</div>
+</body>
+</html>

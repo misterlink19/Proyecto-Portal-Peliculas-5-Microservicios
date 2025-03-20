@@ -1,0 +1,19 @@
+/* Estilo base para el formulario */
+.container {
+    max-width: 600px;
+    margin: auto;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+}

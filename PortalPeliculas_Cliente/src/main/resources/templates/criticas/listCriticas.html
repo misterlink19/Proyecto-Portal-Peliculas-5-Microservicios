@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${titulo}">Listado de Críticas</title>
+    <script th:src="@{/js/listCritica.js}" defer></script>
+</head>
+<body layout:fragment="body">
+<div class="container py-4">
+    <h1 th:text="${titulo}">Listado de Críticas</h1>
+    <div th:if="${param.mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${param.mensaje}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Película</th>
+            <th>Usuario</th>
+            <th>Nota</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${paginaCriticas != null}"  th:each="critica : ${paginaCriticas.content}"
+            th:data-id="${critica.id}"
+            th:data-pelicula-id="${critica.peliculaId}"
+            th:data-usuario="${critica.user.username}">
+
+
+        <td th:text="${critica.id}">ID</td>
+
+            <!-- Mostrar el título de la película usando el Map pasado desde el controlador -->
+            <td>
+                <a th:href="@{'/cpeliculas/detalle/' + ${critica.peliculaId}}"
+                   th:text="${peliculaTitulos[critica.peliculaId] != null ? peliculaTitulos[critica.peliculaId] : 'Desconocida'}">
+                    Película
+                </a>
+            </td>
+
+
+            <!-- Mostrar el nombre del usuario -->
+            <td th:text="${critica.user.username}">Usuario</td>
+            <td th:text="${critica.nota}">Nota</td>
+            <td th:text="${#dates.format(critica.fecha, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+
+            <td>
+                <!-- Botón para ver detalle de la crítica -->
+                <a th:href="@{'/ccriticas/' + ${critica.id}}" class="btn btn-info btn-sm">Ver Detalle</a>
+
+                <!-- Solo los ADMIN pueden editar o eliminar -->
+                <span th:if="${session.role == 'ADMIN'}">
+                <button type="button" class="btn btn-danger btn-sm"
+                        th:data-id="${critica.id}">
+                    Eliminar
+                </button>
+
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:replace="~{paginator-nav :: paginator}"></div>
+</div>
+</body>
+</html>

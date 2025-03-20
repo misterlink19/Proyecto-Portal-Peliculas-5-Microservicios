@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Críticas</title>
+    <script th:src="@{/js/searchCritica.js}" defer></script>
+    <style>
+        .dropdown-label {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body layout:fragment="body">
+<div class="container">
+    <h2 class="text-secondary border border-success border-top-0 border-left-0 border-right-0">Búsqueda de Críticas</h2>
+
+    <div class="mb-3">
+        <label class="form-label dropdown-label" id="searchLabel">Seleccione una opción de búsqueda</label>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                Seleccione una opción
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="#" onclick="selectOption('usuario', 'Ingrese el nombre del usuario', 'Usuario')">Usuario</a></li>
+                <li><a class="dropdown-item" href="#" onclick="selectOption('pelicula', 'Ingrese el título de la película', 'Película')">Película</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <form id="searchForm">
+        <div class="mb-3 col-md-8">
+            <input type="text" class="form-control" id="searchInput" name="usuario" placeholder="Seleccione una opción de búsqueda" disabled>
+            <input type="hidden" id="searchType" name="searchType">
+        </div>
+        <div class="mb-3 d-flex justify-content-start">
+            <button type="button" class="btn btn-primary me-2" onclick="submitSearch()">Buscar</button>
+            <button type="button" class="btn btn-warning me-2" onclick="clearForm()">Borrar</button>
+            <a class="btn btn-secondary" role="button" th:href="@{/home}">Ir a Inicio</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

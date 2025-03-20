@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${titulo}">Formulario de Película</title>
+    <link th:href="@{/styles/formPelicula.css}" rel="stylesheet">
+</head>
+<body layout:fragment="body">
+<div class="container py-4">
+    <h1 th:text="${titulo}">Formulario de Película</h1>
+    <form th:action="@{/cpeliculas/guardar}" th:object="${pelicula}" method="post" enctype="multipart/form-data">
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+            Por favor corrija los siguientes errores:
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Campo oculto para el id -->
+                <input type="hidden" th:field="*{id}">
+
+                <div class="form-group">
+                    <label for="titulo">Título</label>
+                    <input type="text" class="form-control" id="titulo" th:field="*{titulo}" required="required">
+                    <div th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}" class="text-danger"></div>
+                </div>
+                <div class="form-group">
+                    <label for="sinopsis">Sinopsis</label>
+                    <textarea class="form-control" id="sinopsis" th:field="*{sinopsis}" rows="3"
+                              required="required"></textarea>
+                    <div th:if="${#fields.hasErrors('sinopsis')}" th:errors="*{sinopsis}" class="text-danger"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="annio">Año</label>
+                        <input type="number" class="form-control" id="annio" th:field="*{annio}" required="required"
+                               min="1" oninput="validatePositiveNumber(this)">
+                        <div th:if="${#fields.hasErrors('annio')}" th:errors="*{annio}" class="text-danger"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="duracion">Duración (minutos)</label>
+                        <input type="number" class="form-control" id="duracion" th:field="*{duracion}"
+                               required="required" min="1" oninput="validatePositiveNumber(this)">
+                        <div th:if="${#fields.hasErrors('duracion')}" th:errors="*{duracion}" class="text-danger"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="pais">País</label>
+                        <select class="form-control" id="pais" th:field="*{pais}" required="required">
+                            <option th:each="pais : ${paises}" th:value="${pais}" th:text="${pais.nombre}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('pais')}" th:errors="*{pais}" class="text-danger"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="genero">Género</label>
+                        <input type="text" class="form-control" id="genero" th:field="*{genero}" required="required">
+                        <div th:if="${#fields.hasErrors('genero')}" th:errors="*{genero}" class="text-danger"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Director</label>
+                    <input type="text" class="form-control" id="direccion" th:field="*{direccion}" required="required">
+                    <div th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}" class="text-danger"></div>
+                </div>
+                <div class="form-group">
+                    <label for="actores">Reparto</label>
+                    <div class="d-flex justify-content-around align-items-center">
+                        <select class="form-control w-75" multiple="multiple" id="actores" th:field="*{actoresIds}">
+                            <option th:each="actor : ${reparto}" th:value="${actor.id}" th:text="${actor.nombre}"
+                                    th:selected="${#lists.contains(pelicula.actoresIds, actor.id)}"></option>
+                        </select>
+                        <button type="button" role="button" class="btn btn-sm btn-primary ml-2"
+                                onclick="window.location.href='/cactor/nuevo'">Añadir Actor
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="form-group">
+                    <label for="imagenPortada">Portada de la Película</label>
+                    <div class="mb-3">
+                        <img id="portadaPreview" class="img-thumbnail rounded portada-imagen"
+                             th:if="${pelicula.imagenPortada != null && #strings.length(pelicula.imagenPortada) > 0}"
+                             th:src="@{'/cpeliculas/uploads/' + ${pelicula.imagenPortada}}"
+                             th:alt="${pelicula.imagenPortada}">
+                        <img id="portadaPreview" class="img-thumbnail rounded portada-imagen"
+                             th:if="${pelicula.imagenPortada == null || #strings.length(pelicula.imagenPortada) == 0}"
+                             src="#" style="display:none">
+                    </div>
+                    <input type="file" class="form-control" id="imagenPortada" name="imagenPortadaFile"
+                           onchange="readURL(this)">
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="reset" class="btn btn-warning">Reset</button>
+            <a class="btn btn-secondary" th:href="@{/cpeliculas/listado}">Cancelar</a>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/formPelicula.js}"></script>
+</body>
+</html>

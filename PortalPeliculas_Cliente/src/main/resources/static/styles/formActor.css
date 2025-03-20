@@ -1,0 +1,50 @@
+/* formActor.css */
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.form-group {
+    margin-bottom: 10px; /* Más compacto */
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px; /* Más compacto */
+    margin-bottom: 10px; /* Más compacto */
+}
+
+.form-group.col-md-6, .form-group.col-md-12 {
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.form-group.col-md-6 {
+    flex: 0 0 48%;
+    max-width: 48%;
+}
+
+.form-group.col-md-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.btn {
+    margin-top: 10px; /* Más compacto */
+    flex: 1; /* Asegura que todos los botones tengan el mismo tamaño */
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px; /* Más compacto */
+    justify-content: flex-start; /* Alineación a la izquierda */
+}

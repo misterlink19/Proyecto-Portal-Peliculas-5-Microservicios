@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${titulo}">Formulario de Actor</title>
+    <link th:href="@{/styles/formActor.css}" rel="stylesheet">
+</head>
+<body layout:fragment="body">
+<div class="container">
+    <h1 th:text="${titulo}">Formulario de Actor</h1>
+    <form th:action="@{/cactor/guardar}" th:object="${actor}" method="post">
+        <div th:if="${actor.id != null}">
+            <input type="hidden" th:field="*{id}"/>
+        </div>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" id="nombre" th:field="*{nombre}" class="form-control" placeholder="Nombre del actor">
+        </div>
+        <div class="mb-3">
+            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+            <input type="date" id="fechaNacimiento" th:field="*{fechaNacimiento}" class="form-control"
+                   th:data-fechaNacimiento="${actor.fechaNacimiento}">
+        </div>
+        <div class="mb-3">
+            <label for="pais" class="form-label">País</label>
+            <select class="form-control" id="pais" th:field="*{pais}">
+                <option th:each="pais : ${T(TrabajoFrameworksBackendYMicroservicios.PortalPeliculas_Cliente.model.Pais).values()}"
+                        th:value="${pais}" th:text="${pais.nombre}"></option>
+            </select>
+        </div>
+        <div th:if="${actor.id != null}" class="form-group">
+            <label for="peliculas">Películas</label>
+            <select class="form-control" multiple="multiple" id="peliculas" th:field="*{peliculasIds}">
+                <option th:each="pelicula : ${todasPeliculas}" th:value="${pelicula.id}" th:text="${pelicula.titulo}"
+                        th:selected="${#lists.contains(actor.getPeliculasIds(), pelicula.id)}"></option>
+            </select>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="reset" class="btn btn-warning">Reset</button>
+            <a class="btn btn-secondary" th:href="@{/cactor/listado}">Cancelar</a>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/formActor.js}"></script>
+</body>
+</html>

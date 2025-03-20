@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal Película | Página No Encontrada</title>
+</head>
+<body layout:fragment="body">
+<div class="container">
+    <h2 class="text-danger">No se ha encontrado nada</h2>
+    <p class="lead">Lo sentimos, pero no se encontró ningún resultado para su búsqueda.</p>
+    <div class="mb-3 d-flex justify-content-start">
+        <a class="btn btn-primary me-2" href="javascript:history.back()">Regresar</a>
+        <a class="btn btn-secondary" th:href="@{/}">Ir a Inicio</a>
+    </div>
+</div>
+</body>
+</html>
